@@ -60,6 +60,7 @@ const getMyProfileFromDB = async (userId: string) => {
       profile: true,
     },
   });
+
   return user;
 };
 
