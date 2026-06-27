@@ -4,6 +4,8 @@ import cors from "cors";
 import config from "./config";
 import { userRoutes } from "./modules/user/user.route";
 import { authRoutes } from "./modules/auth/auth.routes";
+import { postsRoutes } from "./modules/post/post.route";
+import { commentsRoutes } from "./modules/comment/comment.route";
 
 const app: Application = express();
 
@@ -25,5 +27,7 @@ app.get("/", (req: Request, res: Response) => {
 // app.post();
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/posts", postsRoutes);
+app.use("/api/comments", commentsRoutes);
 
 export default app;
