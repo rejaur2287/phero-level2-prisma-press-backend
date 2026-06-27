@@ -1,6 +1,6 @@
-import { Result } from "pg";
 import { prisma } from "../../lib/prisma";
 import { ICreatePostPayload, IUpdatePostPayload } from "./post.interface";
+import { CommentStatus } from "../../../generated/prisma/enums";
 
 const createPostIntoDB = async (
   payload: ICreatePostPayload,
@@ -30,12 +30,7 @@ const getAllPostsFromDB = async () => {
 };
 
 const getPostByIdFromDB = async (postId: string) => {
-  const post = await prisma.post.findUniqueOrThrow({
-    where: {
-      id: postId,
-    },
-  });
-  const updatedPost = await prisma.post.update({
+  await prisma.post.update({
     where: {
       id: postId,
     },
@@ -44,16 +39,36 @@ const getPostByIdFromDB = async (postId: string) => {
         increment: 1,
       },
     },
+  });
+
+  // throw new Error("Fake Error");
+
+  const post = await prisma.post.findFirstOrThrow({
+    where: {
+      id: postId,
+    },
     include: {
       author: {
         omit: {
           password: true,
         },
       },
-      comments: true,
+      comments: {
+        where: {
+          status: CommentStatus.APPROVED,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
     },
   });
-  return updatedPost;
+  return post;
 };
 
 const getMyPostsFromDB = async (authorId: string) => {
