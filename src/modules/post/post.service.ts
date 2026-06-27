@@ -28,10 +28,63 @@ const getAllPostsFromDB = async () => {
   return posts;
 };
 
-const getPostByIdFromDB = async () => {};
-const getMyPostsFromDB = async () => {};
-const getPostStatsFromDb = async () => {};
+const getPostByIdFromDB = async (postId: string) => {
+  const post = await prisma.post.findUniqueOrThrow({
+    where: {
+      id: postId,
+    },
+  });
+  const updatedPost = await prisma.post.update({
+    where: {
+      id: postId,
+    },
+    data: {
+      views: {
+        increment: 1,
+      },
+    },
+    include: {
+      author: {
+        omit: {
+          password: true,
+        },
+      },
+      comments: true,
+    },
+  });
+  return updatedPost;
+};
+
+const getMyPostsFromDB = async (authorId: string) => {
+  const result = await prisma.post.findMany({
+    where: {
+      authorId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      comments: true,
+      author: {
+        omit: {
+          password: true,
+        },
+      },
+
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+  });
+  return result;
+};
+
+const getPostStatsFromDB = async () => {};
+
 const updatePostInDB = async () => {};
+
 const deletePostFromDB = async () => {};
 
 export const postService = {
@@ -39,7 +92,7 @@ export const postService = {
   getAllPostsFromDB,
   getPostByIdFromDB,
   getMyPostsFromDB,
-  getPostStatsFromDb,
+  getPostStatsFromDB,
   updatePostInDB,
   deletePostFromDB,
 };
