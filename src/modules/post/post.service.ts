@@ -17,6 +17,25 @@ const createPostIntoDB = async (
 
 const getAllPostsFromDB = async () => {
   const posts = await prisma.post.findMany({
+    // where: {
+    //   title: "My Third Post",
+    //   content: "Ronaldo",
+    // },
+    where: {
+      AND: [
+        {
+          title: "My Third Post",
+        },
+        {
+          content: "Ronaldo",
+        },
+        {
+          tags: {
+            equals: ["typescript", "prisma", "express"],
+          },
+        },
+      ],
+    },
     include: {
       author: {
         omit: {
