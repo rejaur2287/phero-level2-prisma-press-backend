@@ -17,25 +17,95 @@ const createPostIntoDB = async (
 
 const getAllPostsFromDB = async () => {
   const posts = await prisma.post.findMany({
+    // filtering / exact match without AND operator
+
     // where: {
     //   title: "My Third Post",
     //   content: "Ronaldo",
     // },
+
+    // filtering / exact match with AND operator
+
+    // where: {
+    //   AND: [
+    //     {
+    //       title: "My Third Post",
+    //     },
+    //     {
+    //       content: "Ronaldo",
+    //     },
+    //     {
+    //       tags: {
+    //         equals: ["typescript", "prisma", "express"],
+    //       },
+    //     },
+    //   ],
+    // },
+
+    // searching / partial match
+
+    // where: {
+    //   title: {
+    //     contains: "Ronaldo",
+    //     mode: "insensitive",
+    //   },
+    //   // x -> not ideal for partial match
+    //   content: {
+    //     contains: "Ronaldo",
+    //     mode: "insensitive",
+    //   },
+    // },
+
+    // search / partial match with OR operator
+    // where: {
+    //   OR: [
+    //     {
+    //       title: {
+    //         contains: "Ronaldo",
+    //         mode: "insensitive",
+    //       },
+    //     },
+    //     {
+    //       content: {
+    //         contains: "Ronaldo",
+    //         mode: "insensitive",
+    //       },
+    //     },
+    //   ],
+    // },
+
+    // Combining search(OR Operator) and filtering(AND operator)
+
     where: {
+      // filter and searching combined
       AND: [
         {
-          title: "My Third Post",
+          // searching
+          OR: [
+            {
+              title: {
+                contains: "Ron",
+                mode: "insensitive",
+              },
+            },
+            {
+              content: {
+                contains: "Ron",
+                mode: "insensitive",
+              },
+            },
+          ],
+        },
+        // filtering
+        {
+          title: "Ronaldo Nazario",
         },
         {
           content: "Ronaldo",
         },
-        {
-          tags: {
-            equals: ["typescript", "prisma", "express"],
-          },
-        },
       ],
     },
+
     include: {
       author: {
         omit: {
