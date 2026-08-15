@@ -7,8 +7,8 @@ import { authRoutes } from "./modules/auth/auth.routes";
 import { postsRoutes } from "./modules/post/post.route";
 import { commentsRoutes } from "./modules/comment/comment.route";
 import { notFound } from "./middlewares/notFound";
-import httpStatus from "http-status";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import { subscriptionRoutes } from "./modules/subscription/subscription.route";
 
 const app: Application = express();
 
@@ -32,6 +32,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/comments", commentsRoutes);
+app.use("api/subscription", subscriptionRoutes);
 
 // app.use((req: Request, res: Response) => {
 //   res.status(404).json({
