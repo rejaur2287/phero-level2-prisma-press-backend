@@ -9,9 +9,9 @@ const registerUserIntoDB = async (payload: RegisterUserPayload) => {
     where: { email },
   });
 
-  if (isUserExists) {
-    throw new Error("User with this email already exists");
-  }
+  // if (isUserExists) {
+  //   throw new Error("User with this email already exists");
+  // }
 
   const hashedPassword = await bcrypt.hash(
     password,
