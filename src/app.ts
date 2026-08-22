@@ -3,13 +3,14 @@ import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import config from "./config";
 import { userRoutes } from "./modules/user/user.route";
-import { authRoutes } from "./modules/auth/auth.routes";
+import { authRoutes } from "./modules/auth/auth.route";
 import { postsRoutes } from "./modules/post/post.route";
 import { commentsRoutes } from "./modules/comment/comment.route";
 import { notFound } from "./middlewares/notFound";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import { subscriptionRoutes } from "./modules/subscription/subscription.route";
 import { stripe } from "./lib/stripe";
+import { premiumRoutes } from "./modules/premium/premium.route";
 
 const app: Application = express();
 
@@ -20,7 +21,7 @@ app.use(
   }),
 );
 
-const endpointSecret = config.stripe_webhook_secret;
+// const endpointSecret = config.stripe_webhook_secret;
 
 // app.post(
 //   "/api/subscription/webhook",
@@ -92,6 +93,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/comments", commentsRoutes);
 app.use("/api/subscription", subscriptionRoutes);
+app.use("/api/subscription", subscriptionRoutes);
+app.use("/api/premium", premiumRoutes);
 
 // app.use((req: Request, res: Response) => {
 //   res.status(404).json({
